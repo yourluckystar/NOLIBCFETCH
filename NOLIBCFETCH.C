@@ -45,6 +45,14 @@ itoa(int num, char *buf)
         }
 }
 
+unsigned long
+strlen(const char *s)
+{
+        unsigned int len = 0;
+        while (s[len]) ++len;
+        return len;
+}
+
 int
 main(int argc, char *argv[])
 {

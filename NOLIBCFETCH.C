@@ -14,7 +14,14 @@ static void print_sysinfo(void);
 void
 err(const char *fmt, ...)
 {
-        /* TODO */
+        /* this should be replaced with
+         * something better xd */
+        char *__progname = "NOLIBCFETCH";
+
+        write(1, __progname, strlen(__progname));
+        write(1, ": ", 2);
+        write(1, fmt, strlen(fmt));
+        exit(-1);
 }
 
 /* not a fully implemented itoa because i only need base 10
@@ -53,8 +60,17 @@ strlen(const char *s)
         return len;
 }
 
+void
+print_sysinfo(void)
+{
+        /* TODO */
+}
+
 int
 main(int argc, char *argv[])
 {
+        /* add arg handling later */
+        print_sysinfo();
+
         return 0;
 }

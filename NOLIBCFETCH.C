@@ -15,6 +15,16 @@ struct utsname {
 };
 struct utsname sys_info;
 
+struct infolines {
+        const char *text;
+        const char *data;
+        const char *newln;
+};
+struct infolines lines[] = {
+        { ">os ", sys_info.sysname, "\n" },
+        { ">host ", sys_info.nodename, "\n" }
+};
+
 static void err(const char *fmt, ...);
 static void itoa(int num, char *buf);
 static unsigned long strlen(const char *s);
@@ -72,13 +82,23 @@ strlen(const char *s)
 void
 print_sysinfo(void)
 {
+        int i;
         long rv;        /* return value */
+        unsigned short rows = sizeof(lines) / sizeof(lines[0]);
 
         /* call sys_uname and store return value
          * into utsname struct */
         rv = uname(SYS_uname, (long)&sys_info);
         if (rv != 0) {
                 err("syscall uname (63) failed\n");
+        }
+
+        /* print each line with a simple loop
+         * but might have to modify later */
+        for (i = 0; i < rows; i++) {
+                write(1, lines[i].text, strlen(lines[i].text));
+                write(1, lines[i].data, strlen(lines[i].data));
+                write(1, lines[i].newln, strlen(lines[i].newln));
         }
 }
 

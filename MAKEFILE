@@ -8,7 +8,7 @@ OBJ = START.O NOLIBCFETCH.O
 # -c [compile without linking]
 # -ffreestanding
 # -x c avoid cpp mangling
-OBJFLAGS = -c -nostdlib -ffreestanding -x c
+OBJFLAGS = -std=c89 -c -nostdlib -ffreestanding -x c
 LNKFLAGS = -nostdlib -static
 
 all: NOLIBCFETCH

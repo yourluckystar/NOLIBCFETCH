@@ -1,0 +1,32 @@
+.POSIX:
+
+include CONFIG.MK
+
+SRC = START.S NOLIBCFETCH.C
+OBJ = START.O NOLIBCFETCH.O
+
+# -c [compile without linking]
+# -ffreestanding
+# -x c avoid cpp mangling
+OBJFLAGS = -c -nostdlib -ffreestanding -x c
+LNKFLAGS = -nostdlib -static
+
+all: NOLIBCFETCH
+
+NOLIBCFETCH:
+	$(CC) -o NOLIBCFETCH.O $(CFLAGS) $(OBJFLAGS) NOLIBCFETCH.C
+	$(ASM) START.S START.O
+	$(CC) -o NOLIBCFETCH START.O NOLIBCFETCH.O $(CFLAGS) $(LNKFLAGS)
+
+clean:
+	rm -f NOLIBCFETCH $(OBJ)
+
+install: NOLIBCFETCH
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp -f NOLIBCFETCH $(DESTDIR)$(PREFIX)/bin
+	chmod 755 $(DESTDIR)$(PREFIX)/bin/NOLIBCFETCH
+
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/NOLIBCFETCH
+
+.PHONY: all clean install uninstall

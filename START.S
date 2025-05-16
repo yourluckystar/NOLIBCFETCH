@@ -4,6 +4,7 @@ public _start
 public _syscall
 public write
 public exit
+public uname
 
 extrn main
 

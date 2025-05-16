@@ -14,12 +14,12 @@ _syscall:
         ret
 
 write:
-        mox eax, 1
+        mov eax, 1
         jmp _syscall
 
 exit:
         mov eax, 60
-        jmp _sycall
+        jmp _syscall
 
 _start:
         xor rbp, rbp

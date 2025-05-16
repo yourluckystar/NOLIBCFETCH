@@ -21,6 +21,11 @@ exit:
         mov eax, 60
         jmp _syscall
 
+uname:
+        mov rax, 63
+        mov rdi, rsi
+        jmp _syscall
+
 _start:
         xor rbp, rbp
         pop rdi

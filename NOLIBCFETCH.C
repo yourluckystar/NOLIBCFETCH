@@ -6,6 +6,15 @@
 #define SYS_uname 63
 #define SYS_sysinfo 99
 
+struct utsname {
+        char sysname[65];         /* os name (linux)              */
+        char nodename[65];        /* weird name for hostname      */
+        char release[65];         /* example x.x.x-arch1-x        */
+        char version[65];         /* dont think ill use this      */
+        char machine[65];         /* hardware identified (x86_64) */
+};
+struct utsname sys_info;
+
 static void err(const char *fmt, ...);
 static void itoa(int num, char *buf);
 static unsigned long strlen(const char *s);
@@ -63,7 +72,14 @@ strlen(const char *s)
 void
 print_sysinfo(void)
 {
-        /* TODO */
+        long rv;        /* return value */
+
+        /* call sys_uname and store return value
+         * into utsname struct */
+        rv = uname(SYS_uname, (long)&sys_info);
+        if (rv != 0) {
+                err("syscall uname (63) failed\n");
+        }
 }
 
 int

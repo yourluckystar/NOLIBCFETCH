@@ -4,6 +4,7 @@ include CONFIG.MK
 
 SRC = START.S NOLIBCFETCH.C
 OBJ = START.O NOLIBCFETCH.O
+ASM = fasm
 
 # -c [compile without linking]
 # -ffreestanding
@@ -12,6 +13,9 @@ OBJFLAGS = -std=c89 -c -nostdlib -ffreestanding -x c
 LNKFLAGS = -nostdlib -static
 
 all: NOLIBCFETCH
+
+config.h:
+        cp config.def.h config.h
 
 NOLIBCFETCH:
 	$(CC) -o NOLIBCFETCH.O $(CFLAGS) $(OBJFLAGS) NOLIBCFETCH.C

@@ -18,10 +18,19 @@ struct utsname {
         char version[65];         /* dont think ill use this      */
         char machine[65];         /* hardware identified (x86_64) */
 };
-struct utsname sys_info;
+struct utsname name;
+
+/* other info lines cause for some reason they are split into
+ * multiple structs */
+struct sysinfo {
+        long uptime;
+        /* TODO */
+};
+struct sysinfo info;
 
 #include "CONFIG.H"
 
+/* labels from START.S */
 long write(int fd, const char *buf, int buf_len);
 void exit(int status);
 int uname(int fd, struct utsname *buf);
@@ -89,7 +98,7 @@ print_sysinfo(void)
 
         /* call sys_uname and store return value
          * into utsname struct */
-        rv = uname(SYS_uname, &sys_info);
+        rv = uname(SYS_uname, &name);
         if (rv != 0) {
                 err("syscall uname (63) failed\n");
         }
@@ -110,7 +119,7 @@ main(int argc, char *argv[])
 
         for (i = 1; i < argc; i++) {
                 if (strlen(argv[i]) < 2 || argv[i][0] != '-')
-                        err("wrong usage");
+                        err("wrong usage\n");
         }
 
         print_sysinfo();

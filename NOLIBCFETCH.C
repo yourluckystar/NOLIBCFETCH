@@ -1,10 +1,15 @@
 /*
  * NOLIBCFETCH(1) - nolibc fetch in asm+c .3
  */
-
 #define SYS_exit 60
 #define SYS_uname 63
 #define SYS_sysinfo 99
+
+typedef struct {
+        const char *text;
+        const char *data;
+        const char *newln;
+} Lines;
 
 struct utsname {
         char sysname[65];         /* os name (linux)              */
@@ -15,25 +20,14 @@ struct utsname {
 };
 struct utsname sys_info;
 
-struct infolines {
-        const char *text;
-        const char *data;
-        const char *newln;
-};
-struct infolines lines[] = {
-        /*
-         * you can change the order if you want
-         *
-         * i also added new line option incase you for
-         * some reason dont want it?
-         */
-        /* text   data              newln */
-        { ">os ", sys_info.sysname, "\n" },
-        { ">host ", sys_info.nodename, "\n" }
-};
+#include "CONFIG.H"
+
+long write(int fd, const char *buf, int buf_len);
+void exit(int status);
+int uname(int fd, struct utsname *buf);
 
 static void err(const char *fmt, ...);
-static void itoa(int num, char *buf);
+/* static void itoa(int num, char *buf); */
 static unsigned long strlen(const char *s);
 static void print_sysinfo(void);
 
@@ -53,7 +47,7 @@ err(const char *fmt, ...)
 /* not a fully implemented itoa because i only need base 10
  * and as far as i know i dont need to check for negative numbers
  * (unless i do in which case yell at me ty) */
-void
+/* void
 itoa(int num, char *buf)
 {
         int i = 0;
@@ -76,7 +70,7 @@ itoa(int num, char *buf)
                 buf[j] = buf[k];
                 buf[k] = tmp;
         }
-}
+} */
 
 unsigned long
 strlen(const char *s)
@@ -95,7 +89,7 @@ print_sysinfo(void)
 
         /* call sys_uname and store return value
          * into utsname struct */
-        rv = uname(SYS_uname, (long)&sys_info);
+        rv = uname(SYS_uname, &sys_info);
         if (rv != 0) {
                 err("syscall uname (63) failed\n");
         }
@@ -112,8 +106,13 @@ print_sysinfo(void)
 int
 main(int argc, char *argv[])
 {
-        /* add arg handling later */
-        print_sysinfo();
+        int i;
 
+        for (i = 1; i < argc; i++) {
+                if (strlen(argv[i]) < 2 || argv[i][0] != '-')
+                        err("wrong usage");
+        }
+
+        print_sysinfo();
         return 0;
 }

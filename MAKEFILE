@@ -2,22 +2,21 @@
 
 include CONFIG.MK
 
-SRC = START.S NOLIBCFETCH.C
-OBJ = START.O NOLIBCFETCH.O
+OBJ = CONFIG.H
 ASM = fasm
 
 # -c [compile without linking]
 # -ffreestanding
 # -x c avoid cpp mangling
-OBJFLAGS = -std=c89 -c -nostdlib -ffreestanding -x c
+OBJFLAGS = -c -nostdlib -ffreestanding -x c
 LNKFLAGS = -nostdlib -static
 
 all: NOLIBCFETCH
 
-config.h:
-	cp config.def.h config.h
+CONFIG.H:
+	cp CONFIG.DEF.H CONFIG.H     
 
-NOLIBCFETCH:
+NOLIBCFETCH: $(OBJ)
 	$(CC) -o NOLIBCFETCH.O $(CFLAGS) $(OBJFLAGS) NOLIBCFETCH.C
 	$(ASM) START.S START.O
 	$(CC) -o NOLIBCFETCH START.O NOLIBCFETCH.O $(CFLAGS) $(LNKFLAGS)
@@ -25,7 +24,7 @@ NOLIBCFETCH:
 clean:
 	rm -f NOLIBCFETCH $(OBJ)
 
-install: NOLIBCFETCH
+install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp -f NOLIBCFETCH $(DESTDIR)$(PREFIX)/bin
 	chmod 755 $(DESTDIR)$(PREFIX)/bin/NOLIBCFETCH

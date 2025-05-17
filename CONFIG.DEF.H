@@ -6,6 +6,8 @@ static const Lines lines[] = {
          * some reason dont want it?
          */
         /* text   data              newln */
-        { ">os ", sys_info.sysname, "\n" },
-        { ">host ", sys_info.nodename, "\n" }
+        { ">os ", name.sysname, "\n" },
+        { ">host ", name.nodename, "\n" },
+        { ">ker ", name.release, "\n" },
+        { ">arc ", name.machine, "\n" }
 };
